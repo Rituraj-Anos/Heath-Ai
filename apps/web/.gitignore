@@ -1,0 +1,16 @@
+# Node
+node_modules/
+dist/
+.env
+.env.*
+.DS_Store
+.vscode/
+*.log
+.idea/
+*.sqlite
+*.local
+coverage/
+/build
+
+# Tailwind output
+*.css

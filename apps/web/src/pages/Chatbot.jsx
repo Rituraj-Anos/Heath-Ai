@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Send, Loader2 } from "lucide-react";
+import axios from "axios";
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([
@@ -18,15 +19,8 @@ const ChatBot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
-  const mockResponses = [
-    "Thank you for your question. This is a demo response from HealthSakhi AI. In the full version, I would provide detailed medical guidance based on current medical literature.",
-    "I understand your concern about your health. This is a sample AI response showing how HealthSakhi would analyze your symptoms and provide helpful information.",
-    "Based on your question, I would normally provide personalized health advice. This demo version shows the interface - the real system will connect to our comprehensive medical knowledge base.",
-    "Your health question is important to me. In the complete version, I would offer evidence-based recommendations and suggest when to consult with healthcare professionals.",
-    "This is a demonstration of how HealthSakhi AI responds to health queries. The actual system will provide detailed, personalized medical information and guidance.",
-  ];
-
-  const handleSendMessage = () => {
+  // Handle sending the user's message and getting the bot's reply from Flask backend
+  const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
     const userMessage = {
       id: Date.now(),
@@ -37,21 +31,33 @@ const ChatBot = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
-    setTimeout(
-      () => {
-        const randomResponse =
-          mockResponses[Math.floor(Math.random() * mockResponses.length)];
-        const botMessage = {
-          id: Date.now() + 1,
-          text: randomResponse,
+
+    try {
+      // Send request to backend Flask API
+      const response = await axios.post("http://localhost:8080/chat", {
+        message: userMessage.text,
+      });
+      const botMessage = {
+        id: Date.now() + 1,
+        text: response.data.answer,
+        sender: "bot",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      // Show error if backend unavailable
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 2,
+          text: "Sorry, there was a problem connecting to HealthSakhi AI. Please try again later.",
           sender: "bot",
           timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, botMessage]);
-        setIsLoading(false);
-      },
-      1500 + Math.random() * 1000
-    );
+        },
+      ]);
+      console.error("Backend error:", error);
+    }
+    setIsLoading(false);
   };
 
   const handleKeyPress = (e) => {

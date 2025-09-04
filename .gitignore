@@ -1,3 +1,2 @@
 # Ignore backend environment files
 backend/.env
-.DS_Store

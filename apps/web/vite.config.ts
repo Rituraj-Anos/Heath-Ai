@@ -14,11 +14,11 @@ import { restart } from "./plugins/restart";
 import { restartEnvFileChange } from "./plugins/restartEnvFileChange";
 
 // Add this import for Vercel React Router preset
-import { vercelPreset } from "@vercel/react-router/preset";
+//import { vercelPreset } from "@vercel/react-router/preset";
 
 export default defineConfig({
   // ⬇️ Add this to include Vercel SPA routing support
-  ...vercelPreset(),
+  //...vercelPreset(),
 
   envPrefix: "NEXT_PUBLIC_",
   optimizeDeps: {

@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* your custom vars and resets */
+:root {
+  --primary-green: #00d4b4;
+  --primary-blue: #2563eb;
+  --secondary-teal: #14b8a6;
+  --emergency-red: #ef4444;
+  --warning-orange: #f59e0b;
+  --success-green: #10b981;
+  --info-blue: #3b82f6;
+}
+
+body {
+  @apply antialiased text-gray-900 bg-[#F3F3F3] dark:bg-[#0A0A0A];
+}

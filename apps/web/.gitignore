@@ -14,3 +14,5 @@ coverage/
 
 # Tailwind output
 *.css
+!apps/web/src/app/styles.css
+

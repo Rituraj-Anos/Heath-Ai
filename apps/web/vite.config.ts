@@ -1,7 +1,6 @@
 import path from "node:path";
-import { reactRouter } from "@react-router/dev/vite";
-import { reactRouterHonoServer } from "react-router-hono-server/dev";
 import { defineConfig } from "vite";
+import { reactRouter } from "@react-router/dev/vite";
 import babel from "vite-plugin-babel";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { addRenderIds } from "./plugins/addRenderIds";
@@ -13,13 +12,9 @@ import { nextPublicProcessEnv } from "./plugins/nextPublicProcessEnv";
 import { restart } from "./plugins/restart";
 import { restartEnvFileChange } from "./plugins/restartEnvFileChange";
 
-// Add this import for Vercel React Router preset
-//import { vercelPreset } from "@vercel/react-router/preset";
+// **DO NOT INCLUDE ANY SERVER/SSR PLUGIN HERE**
 
 export default defineConfig({
-  // ⬇️ Add this to include Vercel SPA routing support
-  //...vercelPreset(),
-
   envPrefix: "NEXT_PUBLIC_",
   optimizeDeps: {
     include: ["fast-glob", "lucide-react"],
@@ -38,10 +33,6 @@ export default defineConfig({
   plugins: [
     nextPublicProcessEnv(),
     restartEnvFileChange(),
-    reactRouterHonoServer({
-      serverEntryPoint: "./__create/index.ts",
-      runtime: "node",
-    }),
     babel({
       include: ["src/**/*.{js,jsx,ts,tsx}"],
       exclude: /node_modules/,
@@ -64,7 +55,7 @@ export default defineConfig({
     consoleToParent(),
     loadFontsFromTailwindSource(),
     addRenderIds(),
-    reactRouter(),
+    reactRouter(), // Only client-side plugin for SPA
     tsconfigPaths(),
     aliases(),
     layoutWrapperPlugin(),
@@ -95,5 +86,8 @@ export default defineConfig({
         "./src/app/routes.ts",
       ],
     },
+  },
+  build: {
+    outDir: "build/client", // Ensures build output matches your Vercel settings
   },
 });
